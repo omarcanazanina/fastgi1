@@ -83,7 +83,6 @@ async PhoneLoginNative() {
 
   //logueo
   logueo(codtel,phoneNumber) {
-    
     let subs = this.au.verificausuarioexistente(phoneNumber.toString())
       .subscribe(resul => {
         this.existe = resul
