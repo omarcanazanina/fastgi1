@@ -2,14 +2,15 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../servicios/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFirestore } from 'angularfire2/firestore';
-
+import { HttpClient } from '@angular/common/http';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 @Component({
   selector: 'app-cargarsaldo',
   templateUrl: './cargarsaldo.page.html',
   styleUrls: ['./cargarsaldo.page.scss'],
 })
 export class CargarsaldoPage implements OnInit {
-  @ViewChild('input',{static:true}) myInput;
+  @ViewChild('input', { static: true }) myInput;
   uu: any
   usuario = {
     cajainterna: "",
@@ -33,12 +34,14 @@ export class CargarsaldoPage implements OnInit {
   fechita: any
   cajatotal: number
   cajatotal1: any
-  caja:number
-  caja1:any
+  caja: number
+  caja1: any
   constructor(private au: AuthService,
     private activate: ActivatedRoute,
     public fire: AngularFirestore,
-    public route: Router) { }
+    public route: Router,
+    private client : HttpClient,
+    private brow:InAppBrowser) { }
   ngOnInit() {
     setTimeout(() => {
       this.myInput.setFocus();
@@ -82,7 +85,7 @@ export class CargarsaldoPage implements OnInit {
       this.caja = parseFloat(this.cajaapp.monto) + parseFloat(monto)
       this.caja1 = this.caja.toFixed(2)
       this.au.actualizacajaapp({ monto: this.caja1 })
-      this.cajatotal = parseFloat(this.usuario.cajainterna) +parseFloat(monto)
+      this.cajatotal = parseFloat(this.usuario.cajainterna) + parseFloat(monto)
       this.cajatotal1 = this.cajatotal.toFixed(2)
       this.au.actualizacaja({ cajainterna: this.cajatotal1 }, this.uu);
       this.fire.collection('/user/' + this.uu + '/ingresos').add({
@@ -94,9 +97,23 @@ export class CargarsaldoPage implements OnInit {
         saldo: this.cajatotal,
         identificador: '1'
       })
-      this.au.cargocontarjeta(monto,'····'+this.dato)
+      this.au.cargocontarjeta(monto, '····' + this.dato)
       this.route.navigate(['/tabs/tab2'])
     }
+  }
+
+
+  enviadatos(monto) {
+    const id = Math.floor(Math.random() * (100 - 1)) + 1;
+    console.log(id);
+    var formData = new FormData();
+    formData.append("codRec", "78");
+    formData.append("monto", monto)
+    this.client.post("https://goodme.aridosgarzon.com/pagos/xml",formData).subscribe(res =>{
+      console.log(res);
+    this.brow.create( `https://test.sintesis.com.bo/payment/#/pay?entidad=581&ref=${res.idTransaccion}&red=https://entrenador-personal-20e1f.firebaseapp.com/pagos;txt=verdadero` );
+    })
+
   }
 
 }
