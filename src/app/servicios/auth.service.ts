@@ -27,6 +27,10 @@ export interface actualizado {
   id: string
   nombre: string
 }
+export interface cont {
+  numero: string
+  id: string
+}
 export interface ingresos {
   id: string,
   descripcion: string,
@@ -792,6 +796,21 @@ export class AuthService {
     await loading.present();
     return loading
   }
+  // generar numero serial para el pago
+  recuperacont(){
+    return this.fire.collection('cont').snapshotChanges().pipe(map(dat => {
+      return dat.map(a => {
+        const data = a.payload.doc.data() as cont;
+        data.id = a.payload.doc.id;
+        return data;
+      })
+    }))
+  }
+
+  actualizacontpago(numero, id) {
+    return this.fire.collection('cont').doc(id).set(numero, { merge: true })
+  }
+
 }
 
 

@@ -38,6 +38,7 @@ export class CargarsaldoPage implements OnInit {
   caja1: any
   //pagos
   recibido:any
+  contador:any
   constructor(private au: AuthService,
     private activate: ActivatedRoute,
     public fire: AngularFirestore,
@@ -105,13 +106,20 @@ export class CargarsaldoPage implements OnInit {
   }
 
   enviadatos(monto) {
-    const id = Math.floor(Math.random() * (100 - 1)) + 1;
-    var formData = new FormData();
-    formData.append("codRec", "108");
-    formData.append("monto", monto)
-    this.client.post("https://goodme.aridosgarzon.com/pagos/xml",formData).subscribe(res =>{
-    this.recibido = res
-    this.brow.create( `https://test.sintesis.com.bo/payment/#/pay?entidad=581&ref=${this.recibido.idTransaccion}&red=https://entrenador-personal-20e1f.firebaseapp.com/pagos;txt=${this.usuario.uid}` );
-    })
+  let subs = this.au.recuperacont().subscribe(cont =>{
+     this.contador = cont[0]
+     subs.unsubscribe()
+      var formData = new FormData();
+      formData.append("codRec", this.contador.numero);
+      formData.append("monto", monto)
+      this.client.post("https://goodme.aridosgarzon.com/pagos/xml",formData).subscribe(res =>{
+      this.recibido = res
+      this.brow.create( `https://test.sintesis.com.bo/payment/#/pay?entidad=581&ref=${this.recibido.idTransaccion}&red=https://entrenador-personal-20e1f.firebaseapp.com/pagos;txt=${this.usuario.uid}` );
+      const c = this.contador.numero+1
+      this.au.actualizacontpago({ numero: c }, this.contador.id);
+      console.log(c);  
+      }) 
+   })
+  
   }
 }
