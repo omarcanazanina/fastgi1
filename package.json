@@ -36,7 +36,7 @@
     "angular2-text-mask": "^9.0.0",
     "angularfire2": "^5.2.1",
     "cordova-android": "^8.1.0",
-    "cordova-ios": "^5.0.1",
+    "cordova-ios": "^5.1.1",
     "cordova-plugin-badge": "^0.8.8",
     "cordova-plugin-camera": "^4.1.0",
     "cordova-plugin-contacts": "^3.0.1",
@@ -120,8 +120,8 @@
       "cordova-plugin-file": {}
     },
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "ios"
     ]
   }
 }

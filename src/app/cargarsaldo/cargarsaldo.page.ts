@@ -113,13 +113,13 @@ export class CargarsaldoPage implements OnInit {
       formData.append("codRec", this.contador.numero);
       formData.append("monto", monto)
       this.client.post("https://goodme.aridosgarzon.com/pagos/xml",formData).subscribe(res =>{
-      this.recibido = res
-      this.brow.create( `https://test.sintesis.com.bo/payment/#/pay?entidad=581&ref=${this.recibido.idTransaccion}&red=https://entrenador-personal-20e1f.firebaseapp.com/pagos;txt=${this.usuario.uid}` );
-      const c = this.contador.numero+1
+        this.recibido = res
+        this.brow.create( `https://test.sintesis.com.bo/payment/#/pay?entidad=581&ref=${this.recibido.idTransaccion}&red=https://entrenador-personal-20e1f.firebaseapp.com/pagos/` ); 
+        //this.brow.create( `https://test.sintesis.com.bo/payment/#/pay?entidad=581&ref=${this.recibido.idTransaccion}&red=https://angular-fastgi.firebaseapp.com/;txt=${this.usuario.uid}` ); 
+        const c = this.contador.numero+1
       this.au.actualizacontpago({ numero: c }, this.contador.id);
       console.log(c);  
       }) 
    })
-  
   }
 }

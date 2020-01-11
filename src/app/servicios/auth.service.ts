@@ -7,7 +7,6 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ToastController, AlertController, NavController, LoadingController } from '@ionic/angular';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
-import { reject } from 'q';
 
 
 export interface usu {
